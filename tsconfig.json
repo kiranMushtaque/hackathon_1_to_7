@@ -18,11 +18,11 @@
         "name": "next"
       }
     ],
-    "types": ["node", "json-schema"],
+    "types": ["node", "next", "react"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./app/*"],
-        "@/lib/*": ["./lib/*"]  
+      "@/lib/*": ["./lib/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

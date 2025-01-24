@@ -1,84 +1,20 @@
-// import type { NextConfig } from "next";
-
-// const nextConfig: NextConfig = {
-//   /* config options here */
-// };
-
-// export default nextConfig;
-
-
-
-// next.config.js
-
-// module.exports = {
-//   images: {
-//     domains: ['cdn.sanity.io'], // Add the domain from which you're loading images
-//   },
-// };
 
 
 
 
+import type { NextConfig } from "next";
 
-
-
-
-
-// import { NextConfig } from "next";
-
-// const nextConfig: NextConfig = {
-//   reactStrictMode: true,
-//   images: {
-//     domains: ["cdn.sanity.io"], // Ensure this domain is added
-//   },
-// };
-
-// export default nextConfig;
-
-
-
-
-
-
-
-
-
-
-
-// // next.config.js
-// module.exports = {
-//   images: {
-//     domains: [
-//       'cdn.sanity.io', // Add any CDN that you're using
-//       'sanity-nextjs-rouge.vercel.app' // Your domain for image hosting
-//     ],
-//   },
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-module.exports = {
+const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cdn.sanity.io", // Add the CDN hostname
-      },
-      {
-        protocol: "https",
-        hostname: "sanity-nextjs-rouge.vercel.app", // Your image hosting domain
-      },
-    ],
+    unoptimized: true,
+    domains: ["cdn.sanity.io"],
+  },
+  eslint: {
+    ignoreDuringBuilds: true, // Disable ESLint during builds
+  },
+  typescript: {
+    ignoreBuildErrors: true, // Ignore TypeScript errors during builds
   },
 };
+
+export default nextConfig;

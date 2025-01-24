@@ -20,6 +20,6 @@ import { defineConfig } from "eslint";
 export default defineConfig({
   extends: ["next/core-web-vitals"], // Default Next.js config for web vitals
   rules: {
-    // Aap apne custom rules yahan add kar sakte hain
+
   },
 });

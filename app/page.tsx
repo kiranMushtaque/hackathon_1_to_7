@@ -5,6 +5,7 @@ import MenuAndChefSection from "./components/menuchefsection";
 import Index from "./components";
 import BlogPosts from "./components/blogpost";
 
+
 const Page = () => {
   return (
     <div>
@@ -222,6 +223,7 @@ const Page = () => {
         <Index />
         <BlogPosts />
       </section>
+     
     </div>
   );
 };

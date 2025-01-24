@@ -8,6 +8,8 @@ import { CartProvider } from "./context/CartContext";
 
 import { WishlistProvider } from "./WishlistContext";
 import { ReviewsProvider } from "./context/ReviewsContext";
+
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -42,7 +44,29 @@ export default function RootLayout({
             </WishlistProvider>
           </CartProvider>
         </ReviewsProvider>
+      
       </body>
     </html>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

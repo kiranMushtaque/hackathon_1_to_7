@@ -7,7 +7,9 @@
 
 "use client";
 
-import React from "react";
+import React from 'react';
+
+
 import { FaPhoneAlt, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 import Image from "next/image";
 

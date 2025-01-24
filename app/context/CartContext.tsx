@@ -1,6 +1,10 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+// import React from 'react';
+
+import React from "react";
+
+import  { createContext, useContext, useState, ReactNode } from "react";
 
 interface CartItem {
   id: string;

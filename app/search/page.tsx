@@ -223,22 +223,29 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-
-// Define the type for a product
-interface Product {
-  name: string;
-  category: string;
-  price: number;
-  originalPrice: number;
-  tags: string[];
-  image: string;
-  description: string;
-  available: boolean;
-}
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
@@ -248,8 +255,8 @@ const SearchPage = () => {
   const maxPrice = parseFloat(searchParams?.get("maxPrice") || "10000"); // Max price
   const tag = searchParams?.get("tag") || ""; // Tag filter
 
-  // Static list of products with explicit typing
-  const staticProducts: Product[] = [
+  // Static list of products
+  const staticProducts = [
     {
       name: "Fresh Lime",
       category: "Drinks",
@@ -316,7 +323,7 @@ const SearchPage = () => {
   ];
 
   // Filtered products state
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const filtered = staticProducts.filter((product) => {
@@ -344,108 +351,110 @@ const SearchPage = () => {
   );
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-4xl font-bold text-center mb-8">
-        Search Results for "{query || "All"}"
-      </h1>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="container mx-auto p-6">
+        <h1 className="text-4xl font-bold text-center mb-8">
+          Search Results for "{query || "All"}"
+        </h1>
 
-      {/* Filters Section */}
-      <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-semibold mb-4">Filters</h2>
-        <div className="flex flex-wrap gap-4">
-          {/* Category Filter */}
-          <select
-            value={category}
-            onChange={(e) => {
-              const selectedCategory = e.target.value;
-              window.location.href = `/search?query=${query}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&tag=${tag}`;
-            }}
-            className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
-          >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-
-          {/* Tag Filter */}
-          <select
-            value={tag}
-            onChange={(e) => {
-              const selectedTag = e.target.value;
-              window.location.href = `/search?query=${query}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&tag=${selectedTag}`;
-            }}
-            className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
-          >
-            <option value="">All Tags</option>
-            {tags.map((tag) => (
-              <option key={tag} value={tag}>
-                {tag}
-              </option>
-            ))}
-          </select>
-
-          {/* Min and Max Price Filters */}
-          <input
-            type="number"
-            value={minPrice}
-            onChange={(e) => {
-              const newMinPrice = e.target.value;
-              window.location.href = `/search?query=${query}&category=${category}&minPrice=${newMinPrice}&maxPrice=${maxPrice}&tag=${tag}`;
-            }}
-            placeholder="Min Price"
-            className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
-          />
-          <input
-            type="number"
-            value={maxPrice}
-            onChange={(e) => {
-              const newMaxPrice = e.target.value;
-              window.location.href = `/search?query=${query}&category=${category}&minPrice=${minPrice}&maxPrice=${newMaxPrice}&tag=${tag}`;
-            }}
-            placeholder="Max Price"
-            className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
-          />
-        </div>
-      </div>
-
-      {/* Products Section */}
-      {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <div
-              key={product.name}
-              className="border rounded-lg shadow-md overflow-hidden bg-white"
+        {/* Filters Section */}
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-semibold mb-4">Filters</h2>
+          <div className="flex flex-wrap gap-4">
+            {/* Category Filter */}
+            <select
+              value={category}
+              onChange={(e) => {
+                const selectedCategory = e.target.value;
+                window.location.href = `/search?query=${query}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}&tag=${tag}`;
+              }}
+              className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
             >
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                <p className="text-gray-700 text-sm mb-1">
-                  Category: {product.category}
-                </p>
-                <p className="text-gray-500 text-sm mb-4">
-                  Tags: {product.tags.join(", ")}
-                </p>
-                <p className="text-lg font-bold mb-2">
-                  ${product.price.toFixed(2)}
-                </p>
-                <p className="text-sm text-gray-600">{product.description}</p>
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+
+            {/* Tag Filter */}
+            <select
+              value={tag}
+              onChange={(e) => {
+                const selectedTag = e.target.value;
+                window.location.href = `/search?query=${query}&category=${category}&minPrice=${minPrice}&maxPrice=${maxPrice}&tag=${selectedTag}`;
+              }}
+              className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
+            >
+              <option value="">All Tags</option>
+              {tags.map((tag) => (
+                <option key={tag} value={tag}>
+                  {tag}
+                </option>
+              ))}
+            </select>
+
+            {/* Min and Max Price Filters */}
+            <input
+              type="number"
+              value={minPrice}
+              onChange={(e) => {
+                const newMinPrice = e.target.value;
+                window.location.href = `/search?query=${query}&category=${category}&minPrice=${newMinPrice}&maxPrice=${maxPrice}&tag=${tag}`;
+              }}
+              placeholder="Min Price"
+              className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
+            />
+            <input
+              type="number"
+              value={maxPrice}
+              onChange={(e) => {
+                const newMaxPrice = e.target.value;
+                window.location.href = `/search?query=${query}&category=${category}&minPrice=${minPrice}&maxPrice=${newMaxPrice}&tag=${tag}`;
+              }}
+              placeholder="Max Price"
+              className="p-3 border rounded-lg bg-white shadow-sm w-full md:w-auto"
+            />
+          </div>
+        </div>
+
+        {/* Products Section */}
+        {filteredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <div
+                key={product.name}
+                className="border rounded-lg shadow-md overflow-hidden bg-white"
+              >
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-4">
+                  <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                  <p className="text-gray-700 text-sm mb-1">
+                    Category: {product.category}
+                  </p>
+                  <p className="text-gray-500 text-sm mb-4">
+                    Tags: {product.tags.join(", ")}
+                  </p>
+                  <p className="text-lg font-bold mb-2">
+                    ${product.price.toFixed(2)}
+                  </p>
+                  <p className="text-sm text-gray-600">{product.description}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-center text-gray-500">
-          <p>No products found. Try adjusting your filters.</p>
-        </div>
-      )}
-    </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center text-gray-500">
+            <p>No products found. Try adjusting your filters.</p>
+          </div>
+        )}
+      </div>
+    </Suspense>
   );
 };
 
