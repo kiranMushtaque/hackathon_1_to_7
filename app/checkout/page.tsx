@@ -1,16 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
 "use client";
 
 import { useState } from "react";
@@ -48,17 +35,50 @@ export default function Checkout() {
     setPaymentMethod(e.target.value);
   };
 
+  // Utility function for input sanitization
+  const sanitizeInput = (input: string) => {
+    return input.replace(/[<>"'%;()&+_]/g, ""); // This removes malicious characters
+  };
+
+  // Phone number validation (only numeric and length check)
+  const validatePhoneNumber = (phone: string) => {
+    const phonePattern = /^[0-9]{10}$/; // Only allow 10 digits (you can adjust this as needed)
+    return phonePattern.test(phone);
+  };
+
+  // Email validation
+  const validateEmail = (email: string) => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Sanitize all fields
+    const sanitizedFormData = {
+      firstName: sanitizeInput(formData.firstName),
+      lastName: sanitizeInput(formData.lastName),
+      email: sanitizeInput(formData.email),
+      phone: sanitizeInput(formData.phone),
+      company: sanitizeInput(formData.company),
+      address: sanitizeInput(formData.address),
+      city: sanitizeInput(formData.city),
+      state: sanitizeInput(formData.state),
+      zipCode: sanitizeInput(formData.zipCode),
+      country: sanitizeInput(formData.country),
+    };
+
+    // Validation
     if (
-      !formData.firstName ||
-      !formData.lastName ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.address ||
-      !formData.city ||
-      !formData.state ||
-      !formData.zipCode ||
+      !sanitizedFormData.firstName ||
+      !sanitizedFormData.lastName ||
+      !sanitizedFormData.email ||
+      !sanitizedFormData.phone ||
+      !sanitizedFormData.address ||
+      !sanitizedFormData.city ||
+      !sanitizedFormData.state ||
+      !sanitizedFormData.zipCode ||
       !paymentMethod
     ) {
       setErrorMessage(
@@ -66,6 +86,19 @@ export default function Checkout() {
       );
       return;
     }
+
+    // Check if phone number is valid
+    if (!validatePhoneNumber(sanitizedFormData.phone)) {
+      setErrorMessage("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    // Check if email is valid
+    if (!validateEmail(sanitizedFormData.email)) {
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
     setErrorMessage(""); // Clear error message if form is valid
     router.push("/order-confirmation");
   };
@@ -81,8 +114,11 @@ export default function Checkout() {
   const grandTotal = totalAmount + shippingCost + tax - discount;
 
   return (
-    <div className="main-container mx-auto mt-20 w-full max-w-screen-xl relative">
-      <form onSubmit={handleSubmit} className="flex w-full gap-8">
+    <div className="main-container mx-auto mt-20 w-full max-w-screen-xl relative px-4 sm:px-8">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col sm:flex-row w-full gap-8"
+      >
         {/* Shipping Information Form */}
         <div className="flex-1">
           <span className="block font-bold text-[20px] text-[#333333] mb-6">
@@ -90,8 +126,8 @@ export default function Checkout() {
           </span>
 
           {/* Form Fields */}
-          <div className="flex gap-8 mb-6">
-            <div className="w-[48%]">
+          <div className="flex flex-col sm:flex-row gap-8 mb-6">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 First name
               </label>
@@ -103,7 +139,7 @@ export default function Checkout() {
                 className="w-full h-10 border border-solid border-[#e0e0e0] px-4"
               />
             </div>
-            <div className="w-[48%]">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 Last name
               </label>
@@ -130,8 +166,8 @@ export default function Checkout() {
             />
           </div>
 
-          <div className="flex gap-8 mb-6">
-            <div className="w-[48%]">
+          <div className="flex flex-col sm:flex-row gap-8 mb-6">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 City
               </label>
@@ -143,7 +179,7 @@ export default function Checkout() {
                 className="w-full h-10 border border-solid border-[#e0e0e0] px-4"
               />
             </div>
-            <div className="w-[48%]">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 State
               </label>
@@ -157,8 +193,8 @@ export default function Checkout() {
             </div>
           </div>
 
-          <div className="flex gap-8 mb-6">
-            <div className="w-[48%]">
+          <div className="flex flex-col sm:flex-row gap-8 mb-6">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 Zip Code
               </label>
@@ -170,7 +206,7 @@ export default function Checkout() {
                 className="w-full h-10 border border-solid border-[#e0e0e0] px-4"
               />
             </div>
-            <div className="w-[48%]">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 Country
               </label>
@@ -184,13 +220,14 @@ export default function Checkout() {
                 <option value="Canada">Canada</option>
                 <option value="UK">UK</option>
                 <option value="Australia">Australia</option>
+                <option value="Pakistan">Pakistan</option>
               </select>
             </div>
           </div>
 
           {/* More Fields */}
-          <div className="flex gap-8 mb-6">
-            <div className="w-[48%]">
+          <div className="flex flex-col sm:flex-row gap-8 mb-6">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 Email address
               </label>
@@ -202,16 +239,18 @@ export default function Checkout() {
                 className="w-full h-10 border border-solid border-[#e0e0e0] px-4"
               />
             </div>
-            <div className="w-[48%]">
+            <div className="w-full sm:w-[48%]">
               <label className="block text-[16px] text-[#333333] mb-2">
                 Phone number
               </label>
               <input
-                type="text"
+                type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
+                pattern="[0-9]{10}"
                 className="w-full h-10 border border-solid border-[#e0e0e0] px-4"
+                placeholder="Enter phone number"
               />
             </div>
           </div>
@@ -249,14 +288,14 @@ export default function Checkout() {
           {/* Place Order Button */}
           <button
             type="submit"
-            className="w-[328px] h-10 bg-[#ff9f0d] text-white text-[18px] rounded-[6px]"
+            className="w-full sm:w-[328px] h-10 bg-[#ff9f0d] text-white text-[18px] rounded-[6px] mt-6"
           >
             Place an order
           </button>
         </div>
 
         {/* Cart Items Section */}
-        <div className="w-[380px] border border-solid border-[#e0e0e0] p-4">
+        <div className="w-full sm:w-[380px] border border-solid border-[#e0e0e0] p-4">
           <span className="block font-bold text-[20px] text-[#333333] mb-6">
             Cart Summary
           </span>

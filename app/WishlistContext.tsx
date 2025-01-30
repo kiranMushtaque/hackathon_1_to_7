@@ -1,16 +1,8 @@
+"use client";
 
+import React from "react";
 
-
-
-
-
-
-
-'use client'
-
-import React from 'react';
-
-import  { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 interface WishlistItem {
   id: string;
@@ -74,4 +66,3 @@ export const useWishlist = (): WishlistContextProps => {
   }
   return context;
 };
-

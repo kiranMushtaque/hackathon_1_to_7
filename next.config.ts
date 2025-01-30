@@ -10,10 +10,10 @@ const nextConfig: NextConfig = {
     domains: ["cdn.sanity.io"],
   },
   eslint: {
-    ignoreDuringBuilds: true, // Disable ESLint during builds
+    ignoreDuringBuilds: true, 
   },
   typescript: {
-    ignoreBuildErrors: true, // Ignore TypeScript errors during builds
+    ignoreBuildErrors: true, 
   },
 };
 

@@ -16,7 +16,7 @@ export default function BlogPosts() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {/* Blog Card 1 */}
           <div className="bg-black border border-gray-800 rounded-lg overflow-hidden shadow-md transition-transform transform hover:scale-105">
             <Image
@@ -24,6 +24,7 @@ export default function BlogPosts() {
               alt="Burger"
               width={423}
               height={349}
+              className="w-full h-auto"
             />
             <div className="p-4">
               <p className="text-yellow-400 text-sm mb-2">10 February 2022</p>
@@ -47,6 +48,7 @@ export default function BlogPosts() {
               alt="Pizza"
               width={423}
               height={349}
+              className="w-full h-auto"
             />
             <div className="p-4">
               <p className="text-yellow-400 text-sm mb-2">10 February 2022</p>
@@ -70,7 +72,7 @@ export default function BlogPosts() {
               alt="Tacos"
               width={423}
               height={349}
-              className="mr-1"
+              className="w-full h-auto"
             />
             <div className="p-4">
               <p className="text-yellow-400 text-sm mb-2">10 February 2022</p>
@@ -88,9 +90,9 @@ export default function BlogPosts() {
           </div>
         </div>
 
-        <div className="flex justify-center mt-8">
+        <div className="flex justify-center mt-8 gap-6">
           <i className="text-yellow-400 fas fa-share-alt cursor-pointer"></i>
-          <i className="text-yellow-400 fas fa-heart cursor-pointer ml-4"></i>
+          <i className="text-yellow-400 fas fa-heart cursor-pointer"></i>
         </div>
       </div>
     </div>

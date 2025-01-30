@@ -6,9 +6,9 @@ const Breadcrumb = () => {
   const pathname = usePathname();
 
   // Split the pathname into parts
-  const paths = pathname.split("/").filter((path) => path !== ""); // Removing empty parts
+  const paths = pathname.split("/").filter((path) => path !== ""); 
 
-  // If we're on the homepage, return null to hide breadcrumbs
+
   if (paths.length === 0) return null;
 
   return (
@@ -17,9 +17,9 @@ const Breadcrumb = () => {
         Home
       </Link>
       {paths.map((path, index) => {
-        const pathName = path.charAt(0).toUpperCase() + path.slice(1); // Capitalize each part
+        const pathName = path.charAt(0).toUpperCase() + path.slice(1); 
 
-        // Create the current path (from root to the current path segment)
+      
         const currentPath = `/${paths.slice(0, index + 1).join("/")}`;
 
         return (

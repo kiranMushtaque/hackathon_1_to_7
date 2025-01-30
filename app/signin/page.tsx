@@ -1,192 +1,215 @@
 "use client";
 
-import  { useState } from "react";
+import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { FiArrowRight, FiTruck, FiHeart, FiCheckCircle } from "react-icons/fi";
+import { motion } from "framer-motion";
 
+// Dynamic imports for Clerk components with SSR disabled
+const SignInButton = dynamic(
+  () => import("@clerk/nextjs").then((mod) => mod.SignInButton),
+  { ssr: false }
+);
+const SignUpButton = dynamic(
+  () => import("@clerk/nextjs").then((mod) => mod.SignUpButton),
+  { ssr: false }
+);
 
-import React from 'react';
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 
-import Link from "next/link";
+export default function Home() {
+  const [isTruckHovered, setIsTruckHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-interface FormData {
-  name: string;
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
-export default function Signin() {
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    email: "",
-    password: "",
-    rememberMe: false,
-  });
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-orange-500 flex items-center justify-center">
+        <motion.div
+          className="animate-pulse-scale"
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <FiTruck className="text-white text-6xl" />
+        </motion.div>
+      </div>
+    );
+  }
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
-  const validateInput = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required.";
-    }
-
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!emailPattern.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address.";
-    }
-
-    if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters long.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  // Variants for animations
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validateInput()) {
-      console.log("Form submitted:", formData);
-    } else {
-      console.log("Form validation failed:", errors);
-    }
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
   };
 
   return (
-    <div className="main-container max-w-sm mx-auto p-6 shadow-lg rounded-md bg-white">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">Sign In</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label
-            className="block text-sm font-medium text-gray-700 mb-2"
-            htmlFor="name"
-          >
-            Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter your name"
-            className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-          {errors.name && (
-            <span className="text-red-500 text-sm mt-1">{errors.name}</span>
-          )}
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-orange-500 to-amber-500 relative overflow-hidden">
+      {/* Animated Background Circles */}
+      <motion.div
+        className="absolute w-96 h-96 rounded-full bg-amber-200 opacity-20 blur-3xl top-1/4 left-1/4"
+        animate={{ scale: [1, 1.1, 1], rotate: [0, 180, 360] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute w-64 h-64 rounded-full bg-white opacity-10 blur-2xl bottom-1/4 right-1/4"
+        animate={{ scale: [1, 1.2, 1], rotate: [360, 180, 0] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-        <div className="mb-4">
-          <label
-            className="block text-sm font-medium text-gray-700 mb-2"
-            htmlFor="email"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-          {errors.email && (
-            <span className="text-red-500 text-sm mt-1">{errors.email}</span>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label
-            className="block text-sm font-medium text-gray-700 mb-2"
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-400 focus:outline-none"
-          />
-          {errors.password && (
-            <span className="text-red-500 text-sm mt-1">{errors.password}</span>
-          )}
-        </div>
-
-        <div className="mb-4 flex items-center">
-          <input
-            type="checkbox"
-            id="rememberMe"
-            name="rememberMe"
-            checked={formData.rememberMe}
-            onChange={handleChange}
-            className="w-4 h-4 text-orange-400 border-gray-300 rounded focus:ring-2 focus:ring-orange-400"
-          />
-          <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700">
-            Remember me?
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          className="w-full p-2 bg-orange-400 text-white font-medium text-lg rounded hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-400"
+      <div className="flex flex-col items-center justify-center min-h-screen px-4 py-12 relative z-10">
+        {/* Header */}
+        <motion.div
+          className="w-full max-w-6xl mb-16"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Sign In
-        </button>
+          <div className="flex items-center justify-between backdrop-blur-sm bg-white/5 rounded-2xl p-4">
+            <span className="text-white font-bold text-2xl tracking-wide flex items-center gap-2">
+              <FiTruck
+                className={`transition-transform duration-300 ${isTruckHovered ? "rotate-12" : ""
+                  }`}
+                onMouseEnter={() => setIsTruckHovered(true)}
+                onMouseLeave={() => setIsTruckHovered(false)}
+              />
+              FoodTuck
+            </span>
+            <div className="flex items-center gap-4">
+              <SignedOut>
+                <SignInButton>
+                  <button className="text-sm text-white hover:underline">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton>
+                  <button className="bg-white text-orange-600 px-6 py-2 rounded-full font-semibold text-sm shadow-lg hover:shadow-xl transition-all">
+                    Get Started
+                  </button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                <SignInButton>
+                  <button className="text-sm text-white hover:underline">
+                    Sign Out
+                  </button>
+                </SignInButton>
+              </SignedIn>
+            </div>
+          </div>
+        </motion.div>
 
-        <p className="text-right text-sm text-gray-500 mt-2">
-          <a href="#" className="hover:underline">
-            Forgot password?
-          </a>
-        </p>
-
-        <div className="flex items-center my-6">
-          <div className="flex-grow h-px bg-gray-300"></div>
-          <span className="px-3 text-sm text-gray-500">OR</span>
-          <div className="flex-grow h-px bg-gray-300"></div>
-        </div>
-
-        <button
-          type="button"
-          className="w-full flex items-center justify-center p-2 border border-gray-300 rounded mb-4 hover:bg-gray-100"
+        {/* Main Content */}
+        <motion.div
+          className="flex flex-col items-center text-center w-full max-w-4xl"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
         >
-          Sign up with Google
-        </button>
+          <motion.div className="mb-8" variants={itemVariants}>
+            <FiHeart className="text-red-500 text-6xl mb-4 animate-bounce" />
+            <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-4 leading-tight">
+              Crafted with {" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-white">
+                Love
+              </span>
+              ,
+              <br />
+              Delivered with {" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-white to-amber-200">
+                Care
+              </span>
+              .
+            </h1>
+          </motion.div>
 
-        <button
-          type="button"
-          className="w-full flex items-center justify-center p-2 border border-gray-300 rounded hover:bg-gray-100"
-        >
-          Sign up with Apple
-        </button>
-      </form>
+          <motion.p
+            className="text-lg md:text-xl text-white/80 mb-12 max-w-2xl"
+            variants={itemVariants}
+          >
+            Experience the joy of delicious, handcrafted meals delivered right
+            to your doorstep.
+          </motion.p>
 
-      {/* Sign Up Link */}
-      <div className="text-center mt-4">
-        <p className="text-sm text-gray-500">
-          Dont have an account?{" "}
-          <Link href="/signup" className="text-orange-600 hover:underline">
-            Sign Up
-          </Link>
-        </p>
+          <motion.div className="relative w-full" variants={itemVariants}>
+            <SignedOut>
+              <motion.div
+                className="inline-block transform transition-transform duration-300 hover:scale-105 mr-4"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <SignInButton>
+                  <button className="bg-white text-orange-600 px-12 py-5 rounded-full font-bold text-xl flex items-center gap-3 shadow-2xl hover:shadow-3xl transition-all group relative overflow-hidden">
+                    <span className="relative z-10">Sign In</span>
+                    <FiArrowRight className="relative z-10 transition-transform group-hover:translate-x-2" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-amber-100 to-white opacity-0 group-hover:opacity-20 transition-opacity" />
+                  </button>
+                </SignInButton>
+              </motion.div>
+              <motion.div
+                className="inline-block transform transition-transform duration-300 hover:scale-105"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <SignUpButton>
+                  <button className="bg-amber-200 text-orange-700 px-12 py-5 rounded-full font-bold text-xl flex items-center gap-3 shadow-2xl hover:shadow-3xl transition-all group relative overflow-hidden">
+                    <span className="relative z-10">Sign Up</span>
+                    <FiCheckCircle className="relative z-10 transition-transform group-hover:rotate-12" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-white to-amber-100 opacity-0 group-hover:opacity-20 transition-opacity" />
+                  </button>
+                </SignUpButton>
+              </motion.div>
+            </SignedOut>
+
+            <SignedIn>
+              <motion.div
+                className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl shadow-xl w-full"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Welcome Back Foodie! 🎉
+                </h2>
+                <p className="text-white/80 mb-6">
+                  Ready for another delicious experience?
+                </p>
+                <div className="mt-6">
+                  <SignInButton>
+                    <button className="bg-white text-orange-600 px-12 py-5 rounded-full font-bold text-xl flex items-center gap-3">
+                      <span>Sign Out</span>
+                      <FiArrowRight />
+                    </button>
+                  </SignInButton>
+                </div>
+              </motion.div>
+            </SignedIn>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+

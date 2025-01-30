@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import StatsSection from "../components/StatsSection";
+
+
 export default function MenuPage() {
   const router = useRouter();
 
@@ -169,7 +171,22 @@ export default function MenuPage() {
           </motion.div>
         </div>
       </motion.section>
+
       <StatsSection />
+    
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

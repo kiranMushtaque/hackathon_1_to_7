@@ -1,23 +1,21 @@
 "use client";
 
-import React from 'react';
-
-import { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; // For handling routing in next.js
-import { usePathname } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { RxDropdownMenu } from "react-icons/rx";
 import { FaUserCircle, FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const Navbar = () => {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const { cart } = useCart(); // Access the cart from context
-  const router = useRouter(); // To navigate to search results page
+  const { cart } = useCart();
+  const router = useRouter();
 
   const dropdownItems = [
     { label: "Checkout", href: "/checkout" },
@@ -30,22 +28,19 @@ const Navbar = () => {
     { label: "Order-Confirmation", href: "/order-confirmation" },
   ];
 
-  // Get the total number of items in the cart
   const totalItemsInCart = cart.reduce(
     (total, product) => total + product.quantity,
     0
   );
 
-  // Handle search term change
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  // Handle search form submission
-  const handleSearchSubmit = (event: React.FormEvent) => {
+  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (searchTerm.trim()) {
-      router.push(`/search?query=${searchTerm}`); // Navigate to search results page
+      router.push(`/search?query=${searchTerm}`);
     }
   };
 
@@ -62,7 +57,7 @@ const Navbar = () => {
         />
       )}
 
-      <div className="absolute inset-0 flex flex-col items-center space-y-6 z-20">
+      <div className="absolute inset-0 flex flex-col items-center space-y-6 z-20 px-4 md:px-0">
         <div className="flex items-center space-x-1 pt-5 z-20">
           <Link
             href="/"
@@ -73,8 +68,8 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="flex items-center justify-between w-full px-64 z-20">
-          <nav className="flex space-x-6 z-20">
+        <div className="flex flex-col md:flex-row items-center justify-between w-full px-4 md:px-10 lg:px-64 z-20">
+          <nav className="flex flex-wrap space-x-6 z-20">
             <Link href="/" className="text-white hover:text-[#FF9F0D] z-20">
               Home
             </Link>
@@ -83,12 +78,6 @@ const Navbar = () => {
             </Link>
             <Link href="/blog" className="text-white hover:text-[#FF9F0D] z-20">
               Blog
-            </Link>
-            {/* <Link href="/page" className="text-white hover:text-[#FF9F0D] z-20">
-              Page
-            </Link> */}
-            <Link href="/faqs" className="text-white hover:text-[#FF9F0D] z-20">
-              FaqsPage
             </Link>
 
             <Link
@@ -101,18 +90,23 @@ const Navbar = () => {
               Shop
             </Link>
             <Link
+              href="/CustomerCare"
+              className="text-white hover:text-[#FF9F0D] z-20"
+            >
+              CustomerCare
+            </Link>
+            <Link
               href="/contact"
               className="text-white hover:text-[#FF9F0D] z-20"
             >
               Contact
             </Link>
-
             <Link href="/wishlist">
               <button className="text-white hover:text-[#FF9F0D]">
                 Wishlist
               </button>
             </Link>
-            {/* Dropdown Menu */}
+
             <div className="relative z-20">
               <button
                 onClick={() => setDropdownOpen(!isDropdownOpen)}
@@ -137,11 +131,9 @@ const Navbar = () => {
             </div>
           </nav>
 
-          <div className="flex items-center space-x-36 z-20">
+          <div className="flex items-center flex-wrap space-x-36 mt-4 md:mt-0 z-20">
             <div className="relative z-20">
               <form onSubmit={handleSearchSubmit}>
-                {" "}
-                {/* Form to handle search submission */}
                 <input
                   type="text"
                   value={searchTerm}
@@ -164,15 +156,19 @@ const Navbar = () => {
               </form>
             </div>
 
-            <div className="relative right-32 z-20 flex items-center space-x-6">
-              {/* Account Icon */}
-              <Link href="/signin">
-                <div className="relative flex items-center cursor-pointer">
-                  <FaUserCircle className="text-white w-8 h-8" />
-                </div>
-              </Link>
+            <div className="relative md:right-32 right-0 z-20 flex items-center space-x-6 mt-4 md:mt-0">
+              <SignedOut>
+                <Link href="/signin">
+                  <div className="relative flex items-center cursor-pointer">
+                    <FaUserCircle className="text-white w-8 h-8" />
+                  </div>
+                </Link>
+              </SignedOut>
 
-              {/* Cart Icon with Badge */}
+              <SignedIn>
+                <UserButton afterSignOutUrl="/" />
+              </SignedIn>
+
               <Link href="/shoppingcart">
                 <div className="relative flex items-center cursor-pointer">
                   <FaShoppingCart className="text-white w-8 h-8" />
@@ -188,10 +184,9 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Page Heading and Breadcrumbs */}
       {!isHomePage && (
         <div className="absolute top-48 w-full text-center">
-          <h1 className="text-6xl font-bold mb-2">
+          <h1 className="text-3xl md:text-6xl font-bold mb-2">
             {pathname.split("/").pop()?.toUpperCase()}
           </h1>
           <div className="text-sm">
@@ -210,33 +205,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

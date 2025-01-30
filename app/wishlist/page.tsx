@@ -1,15 +1,11 @@
-
-
-
 "use client";
 
-import React from 'react';
+import React from "react";
 
 import { useState, useEffect } from "react";
 import { FaHeart, FaBroom, FaTrash, FaShareAlt } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 
-// Data of your products (You can fetch this dynamically or use a static list)
 const productList = [
   {
     id: 1,

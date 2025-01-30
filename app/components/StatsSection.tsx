@@ -1,12 +1,4 @@
-
-
-
-
-
-
-
-
-"use client"
+"use client";
 import Image from "next/image";
 import { motion, Variants } from "framer-motion";
 import { useState, useEffect } from "react";
@@ -137,7 +129,7 @@ const StatsSection = () => {
         className="absolute inset-0 w-full h-full opacity-20 object-cover"
       />
       <div className="relative container mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
           {animatedStats.map((stat, index) => (
             <motion.div
               key={index}
@@ -169,7 +161,7 @@ const StatsSection = () => {
                 initial="initial"
                 animate="animate"
                 whileHover="hover"
-                className="text-4xl font-bold text-white"
+                className="text-2xl sm:text-4xl font-bold text-white"
               >
                 {stat.value}
                 {stat.label === "Years Of Experienced" ? "+" : ""}
@@ -180,7 +172,7 @@ const StatsSection = () => {
                 initial="initial"
                 animate="animate"
                 whileHover="hover"
-                className="text-gray-300 text-sm"
+                className="text-gray-300 text-sm sm:text-base"
               >
                 {stat.label}
               </motion.p>

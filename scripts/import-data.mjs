@@ -58,7 +58,7 @@ async function uploadChefDataToSanity(chef) {
     }
 
     const sanityChef = {
-      _type: "chef", // Ensure your Sanity schema uses 'chef' type
+      _type: "chef", 
       name: chef.name,
       position: chef.position || "",
       experience: chef.experience || 0,

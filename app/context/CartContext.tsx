@@ -1,10 +1,7 @@
+
 "use client";
 
-// import React from 'react';
-
-import React from "react";
-
-import  { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
 interface CartItem {
   id: string;
@@ -14,20 +11,19 @@ interface CartItem {
   image: string;
 }
 
-// Define types for the Cart context
 interface CartContextType {
   cart: CartItem[];
+  shipmentId: string | null; // Added shipmentId here
   updateQuantity: (id: string, delta: number) => void;
   removeProduct: (id: string) => void;
   addToCart: (product: CartItem) => void;
+  setShipmentId: (id: string) => void; 
 }
 
-// Define the props for the CartProvider, including children
 interface CartProviderProps {
   children: ReactNode;
 }
 
-// Create context with default values
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const useCart = () => {
@@ -40,7 +36,9 @@ export const useCart = () => {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [shipmentId, setShipmentId] = useState<string | null>(null); // Initialize shipmentId state
 
+  // Function to update product quantity
   const updateQuantity = (id: string, delta: number) => {
     setCart((prev) =>
       prev.map((product) =>
@@ -51,10 +49,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     );
   };
 
+  // Function to remove a product from the cart
   const removeProduct = (id: string) => {
     setCart((prev) => prev.filter((product) => product.id !== id));
   };
 
+  // Function to add a product to the cart
   const addToCart = (product: CartItem) => {
     setCart((prev) => {
       const existingProduct = prev.find((item) => item.id === product.id);
@@ -69,9 +69,21 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     });
   };
 
+  // Function to set the shipment ID after an order is placed
+  const setShipment = (id: string) => {
+    setShipmentId(id);
+  };
+
   return (
     <CartContext.Provider
-      value={{ cart, updateQuantity, removeProduct, addToCart }}
+      value={{
+        cart,
+        shipmentId,
+        updateQuantity,
+        removeProduct,
+        addToCart,
+        setShipmentId: setShipment, 
+      }}
     >
       {children}
     </CartContext.Provider>
