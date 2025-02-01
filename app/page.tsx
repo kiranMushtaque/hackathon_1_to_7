@@ -139,8 +139,8 @@ const Page = () => {
                   <Image
                     src="/images/Black Modern Burger Promotion Banner Landscape.png"
                     alt="Welcome Banner"
-                    width={700}
-                    height={300}
+                    width={800}
+                    height={250}
                     className="rounded-2xl transform transition-transform duration-700 hover:scale-105"
                   />
 
