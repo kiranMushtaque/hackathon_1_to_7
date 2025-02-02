@@ -17,3 +17,4 @@ APIs: Third-party integrations for food vendors, payment systems, and real-time 
 Security: HTTPS, input validation, and other security measures to protect user data.
 Live Demo
 You can view the live demo of the Fast Food Marketplace on Vercel https://hackathon-1-to-7.vercel.app/ Check out the project in action!
+You can access the full documentation here: Hackathon Day 1 to Day 7 Documentation
