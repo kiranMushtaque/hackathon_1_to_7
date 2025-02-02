@@ -20,7 +20,7 @@ const Navbar = () => {
   const dropdownItems = [
     { label: "Checkout", href: "/checkout" },
     { label: "Signin", href: "/signin" },
-    { label: "SignUp", href: "/signup" },
+   
     { label: "Our Chef", href: "/ourchef" },
     { label: "Shop Details", href: "/shopdetails" },
     { label: "Shopping Cart", href: "/shoppingcart" },
